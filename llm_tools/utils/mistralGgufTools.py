@@ -35,6 +35,7 @@ class MistralGgufAssistant:
         answer = ""
 
         for token in generator:
+            tokens.append(token)
             if token == self.model.token_eos():
                 break
             answer += self.model.detokenize([token]).decode("utf-8", errors="ignore")
