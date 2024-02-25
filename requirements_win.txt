@@ -6,5 +6,4 @@ torch==2.0
 requests==2.31.0
 sentencepiece==0.2.0
 accelerate==0.27.2
-llama-cpp-python==0.2.48
 fire==0.5.0

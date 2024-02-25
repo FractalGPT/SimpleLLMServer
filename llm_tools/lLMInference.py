@@ -1,5 +1,6 @@
 from llm_tools.baseLLM import BaseLLM
 from llm_tools.huggingFaceLLM import HuggingFaceLLM
+from llm_tools.mistralGguf import MistralGGUF
 
 
 class LLMInference(BaseLLM):
@@ -13,7 +14,10 @@ class LLMInference(BaseLLM):
         """
         if model_type in HuggingFaceLLM.get_set_types():
             self.llm = HuggingFaceLLM(self.device)
-            self.llm.load_model(model_name_or_path, model_type)
+        if model_type in MistralGGUF.get_set_types():
+            self.llm = MistralGGUF(self.device)
+
+        self.llm.load_model(model_name_or_path, model_type)
 
     def get_answer(self, prompt: str) -> str:
         """
