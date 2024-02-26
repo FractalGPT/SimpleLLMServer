@@ -5,15 +5,12 @@ from llm_tools.lLMInference import LLMInference
 router = APIRouter()
 llm = LLMInference()
 
-
-@router.get("/load_gpt_model/{model_name}")
-async def load_gpt_model(model_name: str):
-    llm.load_model(model_name)
+llm.load_model('IlyaGusev/rugpt_medium_turbo_instructed')
 
 
-@router.get("/load_t5_model/{model_name}")
-async def load_t5_model(model_name: str):
-    llm.load_model(model_name, "t5")
+@router.get("/load_llm_model/{model_name}")
+async def load_llm_model(model_name: str, model_type: str = Query('gpt2', alias="model type")):
+    llm.load_model(model_name, model_type)
 
 
 @router.get("/text_generation/{prompt}")
@@ -26,5 +23,6 @@ async def text_generation(
         no_repeat_ngram_size: int = Query(3, alias="no_repeat_ngram_size")
 ):
     # Set the generation parameters before generating the answer
-    llm.set_generation_parameters(max_length=max_length, temperature=temperature, top_k=top_k, top_p=top_p, no_repeat_ngram_size=no_repeat_ngram_size)
+    llm.set_generation_parameters(max_length=max_length, temperature=temperature, top_k=top_k, top_p=top_p,
+                                  no_repeat_ngram_size=no_repeat_ngram_size)
     return {"answer": llm.get_answer(prompt)}
