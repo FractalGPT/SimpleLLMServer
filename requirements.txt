@@ -2,9 +2,9 @@ transformers==4.37.0
 pydantic==2.5.2
 uvicorn==0.24.0.post1
 fastapi==0.104.1
-torch==2.0
+torch==2.1
 requests==2.31.0
 sentencepiece==0.2.0
 accelerate==0.27.2
-llama-cpp-python==0.2.48
 fire==0.5.0
+pydantic_settings==2.2.1

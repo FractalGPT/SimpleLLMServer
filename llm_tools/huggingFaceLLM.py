@@ -40,7 +40,7 @@ class HuggingFaceLLM(BaseLLM):
         input_ids = self.tokenizer.encode(prompt, return_tensors="pt").to(self.device)
 
         generation_parameters = {
-            "max_length": self.max_length,
+            "max_length": len(input_ids[0])+self.max_length,
             "temperature": self.temperature,
             "top_k": self.top_k,
             "top_p": self.top_p,
