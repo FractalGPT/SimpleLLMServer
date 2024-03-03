@@ -39,9 +39,10 @@ def load_config(llm: LLMInference):
     """
     settings = Settings()  # Initialize the settings object from environment variables or .env file
 
-    if len(settings.model_name) > 2:
-        llm.load_model(settings.model_name, settings.model_type)
-
     if len(settings.device_type) > 1:
         llm.device = settings.device_type
         print(llm.device)
+
+    if len(settings.model_name) > 2:
+        llm.load_model(settings.model_name, settings.model_type)
+
