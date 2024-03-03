@@ -38,9 +38,10 @@ class HuggingFaceLLM(BaseLLM):
             raise Exception("Model not loaded. Please load a model before generating text.")
 
         input_ids = self.tokenizer.encode(prompt, return_tensors="pt").to(self.device)
+        len_prompt = len(input_ids[0])
 
         generation_parameters = {
-            "max_length": len(input_ids[0])+self.max_length,
+            "max_length": len_prompt+self.max_length,
             "temperature": self.temperature,
             "top_k": self.top_k,
             "top_p": self.top_p,
@@ -57,7 +58,7 @@ class HuggingFaceLLM(BaseLLM):
         else:
             raise ValueError("Unsupported model type. Please load a model first.")
 
-        return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return self.tokenizer.decode(outputs[0][len_prompt:], skip_special_tokens=True)
 
     def set_generation_parameters(self, max_length: int = None, temperature: float = None, top_k: int = None,
                                   top_p: float = None, no_repeat_ngram_size: int = None):
