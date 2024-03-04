@@ -1,22 +1,24 @@
 from llm_tools.baseLLM import BaseLLM
-from llm_tools.huggingFaceLLM import HuggingFaceLLM
-# from llm_tools.mistralGguf import MistralGGUF
+from llm_tools.gptHuggingFace import GPTHuggingFace
+from llm_tools.t5HuggingFace import T5HuggingFace
 
 
 class LLMInference(BaseLLM):
     def __init__(self, device: str = 'cpu'):
         self.llm = None
         self.device = device
+        self.llms_type = [GPTHuggingFace, T5HuggingFace]
 
     def load_model(self, model_name_or_path: str, model_type: str = 'gpt2') -> None:
         """
         Loads the specified model and tokenizer based on the model type.
         """
-        if model_type in HuggingFaceLLM.get_set_types():
-            self.llm = HuggingFaceLLM(self.device)
-        # if model_type in MistralGGUF.get_set_types():
-        #     self.llm = MistralGGUF(self.device)
+        model_type_ = model_type.lower()
 
+        for llm_type in self.llms_type:
+            if model_type_ in llm_type.get_set_types():
+                self.llm = llm_type(self.device)
+                break
         self.llm.load_model(model_name_or_path, model_type)
 
     def get_answer(self, prompt: str) -> str:

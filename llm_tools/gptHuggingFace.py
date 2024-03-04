@@ -1,9 +1,9 @@
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from llm_tools.baseLLM import BaseLLM
 
 
-class HuggingFaceLLM(BaseLLM):
+class GPTHuggingFace(BaseLLM):
     def __init__(self, device: str):
         self.model = None
         self.tokenizer = None
@@ -21,13 +21,7 @@ class HuggingFaceLLM(BaseLLM):
         """
         Loads the specified model and tokenizer based on the model type.
         """
-        self.model_type = model_type.lower()
-        if self.model_type == 'gpt2':
-            self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path).to(self.device)
-        elif self.model_type == 't5':
-            self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name_or_path).to(self.device)
-        else:
-            raise ValueError("Unsupported model type. Please choose 'gpt2' or 't5'.")
+        self.model = AutoModelForCausalLM.from_pretrained(model_name_or_path).to(self.device)
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
 
     def get_answer(self, prompt: str) -> str:
@@ -50,16 +44,7 @@ class HuggingFaceLLM(BaseLLM):
             "no_repeat_ngram_size": self.no_repeat_ngram_size
         }
 
-        if self.model_type == 'gpt2':
-            outputs = self.model.generate(input_ids, **generation_parameters)
-        elif self.model_type == 't5':
-            input_ids = self.tokenizer.encode(prompt, return_tensors="pt").to(self.device)
-            outputs = self.model.generate(input_ids, **generation_parameters)
-        else:
-            raise ValueError("Unsupported model type. Please load a model first.")
-
-        print(self.model.device)
-
+        outputs = self.model.generate(input_ids, **generation_parameters)
         return self.tokenizer.decode(outputs[0][len_prompt:], skip_special_tokens=True)
 
     def set_generation_parameters(self, max_length: int = None, temperature: float = None, top_k: int = None,
@@ -80,4 +65,4 @@ class HuggingFaceLLM(BaseLLM):
 
     @staticmethod
     def get_set_types():
-        return {'gpt2', 't5', 'fred'}
+        return {'gpt2'}
